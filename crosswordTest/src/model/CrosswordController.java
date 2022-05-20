@@ -19,8 +19,22 @@ public class CrosswordController {
 	 * the initial state of a crossword puzzle
 	 */
 	public void initCrossword(String[][] puzzle) {
-		
-		
+
+		crossword= new Cell[puzzle.length][puzzle[0].length];
+
+		int number=1;
+		String letter="";
+		for(int i=0; i<puzzle.length; i++){
+			for(int j=0; j<puzzle[0].length; j++){
+				if(puzzle[i][j].equals(" ")){
+					crossword[i][j]=new Cell(CellType.BLACK, " ", 0);
+				} else {
+					letter=puzzle[i][j];
+					crossword[i][j]=new Cell(CellType.CLOSED, letter, number);
+					number++;
+				}
+			}
+		}
 	}
 	/**
 	 * Method to verify if a crossword puzzle is initialized
@@ -51,8 +65,20 @@ public class CrosswordController {
 	 * @return
 	 */
 	public String getHint(String letter) {
-		
-		return null;
+		String msg="La letra no se encuentra en el crucigrama";
+		boolean flag=false;
+		for(int i=0; i<crossword.length && !flag; i++){
+			for(int j=0; j<crossword[0].length && !flag; j++){
+				if(crossword[i][j].getState()==CellType.CLOSED){
+					if(crossword[i][j].getLetter().equals(letter)){
+						msg="La letra "+letter+" se encuentra en la posición "+crossword[i][j].getNumber();
+						crossword[i][j].setState(CellType.OPEN);
+						flag=true;
+					}
+				}
+			}
+		}
+		return msg;
 	}
 	
 	/**
@@ -62,8 +88,18 @@ public class CrosswordController {
 	 * @return
 	 */
 	public String evaluateCell(String letter, int num) {
-		
-		return null;
+		String msg="";
+		boolean flag=false;
+		for(int i=0; i<crossword.length && !flag; i++){
+			for(int j=0; j<crossword[0].length && !flag; j++){
+				msg="La letra "+letter+" NO se encuentra en la posición "+num;
+				if(crossword[i][j].getLetter().equals(letter) && crossword[i][j].getNumber()==num){
+					msg="La letra "+letter+" SI se encuentra en la posición "+num;
+					flag=true;
+				}
+			}
+		}
+		return msg;
 	}
 	
 	public String showCrossword() {
